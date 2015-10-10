@@ -2,6 +2,7 @@ package com.github.robroseknows.movieapp;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,15 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link MainFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- */
 public class MainFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
     private final String API_KEY = "hunter2";  // TODO: Remove before commit!!
 
 
@@ -33,43 +27,39 @@ public class MainFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_main, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+    private class MovieObject {
+        private int movieId = 286217;
+        private String movieTitle = "The Martian";
+        private double moviePopularity = 38.598673;
+        private double movieVoteAvg = 7.7;
+        private String moviePosterPath = "/AjbENYG3b8lhYSkdrWwlhVLRPKR.jpg";
+    }
+
+    public class FetchMovieListTask extends AsyncTask<String, Void, String[]> {
+
+        @Override
+        protected String[] doInBackground(String... params) {
+            if(params.length == 0) {
+                return null;
+            }
+
+            String[] out = new String[5];
+
+            try {
+                final String CALL_BASE_URL = "http://api.themoviedb.org/3/discover/movie";
+                final String SORTBY_PARAM = "sort_by";
+                final String API_PARAM = "api_key";
+
+
+                Uri builtUri = Uri.parse(CALL_BASE_URL).buildUpon()
+                        .appendQueryParameter()
+                )
+            }
+
+            ///?sort_by=popularity.desc&api_key=
+
+            return out;
         }
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
     }
 
 }

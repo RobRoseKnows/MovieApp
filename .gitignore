@@ -1,3 +1,7 @@
+# Custom
+/app/src/main/java/com/github/robroseknows/movieapp/SecretKeys.java
+
+# Studio
 .gradle
 /local.properties
 /.idea/workspace.xml

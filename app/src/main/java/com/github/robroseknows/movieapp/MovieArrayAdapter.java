@@ -1,7 +1,18 @@
 package com.github.robroseknows.movieapp;
 
 import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Robert on 11/8/2015.
@@ -11,31 +22,30 @@ public class MovieArrayAdapter extends ArrayAdapter {
     private ArrayList<MovieObject> movies;
     private int layoutResource;
 
-    private static final POSTER_PATH = "image.tmdb.org/t/p/w185";
-    private static final LOG_TAG = "MovieArrayAdapter";
+    private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185";
+    private static final String LOG_TAG = "MovieArrayAdapter";
 
-    public MovieArrayAdapter(Context context, int resource, Object[] objects) {
+    public MovieArrayAdapter(Context context, int resource, MovieObject[] objects) {
+        super(context, resource, objects);
+
         this.context = context;
-        this.movies = objects;
+        this.movies = new ArrayList<>(Arrays.asList(objects));
         this.layoutResource = resource;
 
-        super(context, resource, objects);
     }
 
+    @Override
     public int getCount() {
-        movies.size();
+        return movies.size();
     }
 
-    public Object getItem(int position) {
+    @Override
+    public MovieObject getItem(int position) {
         return movies.get(position);
     }
 
-    public int getItemId(int position) {
-        return position;
-    }
-
     public View getView(int position, View convertView, ViewGroup parent) {
-        LinearLayouyt itemLayout;
+        LinearLayout itemLayout;
         MovieObject movie = getItem(position);
         View row = null;
 
@@ -48,10 +58,15 @@ public class MovieArrayAdapter extends ArrayAdapter {
             row = convertView;
         }
 
-        if(artist != null) {
-            ((TextView) row.findViewById(R.id.movie_title)).setText(movie.movieTitle);
+        if(movie != null) {
 
+            TextView titleTextView = (TextView) row.findViewById(R.id.movie_title);
+            ImageView posterImageView = (ImageView) row.findViewById(R.id.movie_poster);
+
+            (titleTextView).setText(movie.getMovieTitle());
+            Picasso.with(context).load(POSTER_PATH + movie.getMoviePosterPath()).into(posterImageView);
         }
 
+        return row;
     }
 }

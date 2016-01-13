@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 
 public class MainFragment extends Fragment {
@@ -38,7 +39,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new MovieArrayAdapter(MainFragment.this, R.layout.movie_poster_item, movies);
+        adapter = new MovieArrayAdapter(null, R.layout.movie_poster_item, (MovieObject[]) movies.toArray());
         setHasOptionsMenu(true);
     }
 
@@ -157,6 +158,7 @@ public class MainFragment extends Fragment {
             MovieObject[] resultObjects = new MovieObject[movieArray.length()];
             for(int i = 0; i < movieArray.length(); i++) {
                 JSONObject currentJsonObject = (JSONObject) movieArray.get(i);
+                Log.v(LOG_TAG, currentJsonObject.getString(MDB_POSTER));
                 MovieObject newMovieObject = new MovieObject(
                         currentJsonObject.getInt(MDB_ID),
                         currentJsonObject.getString(MDB_TITLE),

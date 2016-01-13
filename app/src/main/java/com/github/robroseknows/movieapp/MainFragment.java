@@ -29,6 +29,7 @@ public class MainFragment extends Fragment {
     private final String API_KEY = SecretKeys.MOVIEDB_KEY;
     private final String LOG_TAG = "MainFragment";
     private MovieArrayAdapter adapter;
+    private ArrayList<MovieObject> movies;
 
     public MainFragment() {
         // Required empty public constructor
@@ -37,7 +38,7 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        adapter = new MovieArrayAdapter(MainFragment.this, R.layout.movie_poster_item, movies);
         setHasOptionsMenu(true);
     }
 
@@ -172,8 +173,10 @@ public class MainFragment extends Fragment {
         protected void onPostExecute(MovieObject[] result) {
             super.onPostExecute(result);
             if(result != null) {
+                movies.clear();
                 adapter.clear();
                 for(MovieObject movie : result) {
+                    movies.add(movie);
                     adapter.add(movie);
                 }
             }

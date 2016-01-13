@@ -13,23 +13,27 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by Robert on 11/8/2015.
  */
 public class MovieArrayAdapter extends ArrayAdapter {
     private Context context;
-    private ArrayList<MovieObject> movies;
+    private List<MovieObject> movies;
     private int layoutResource;
 
     private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185";
     private static final String LOG_TAG = "MovieArrayAdapter";
 
-    public MovieArrayAdapter(Context context, int resource, MovieObject[] objects) {
+    public MovieArrayAdapter(Context context, int resource, List<MovieObject> objects) {
         super(context, resource, objects);
 
         this.context = context;
-        this.movies = new ArrayList<>(Arrays.asList(objects));
+        if(objects != null)
+            this.movies = objects;
+        else
+            this.movies = new ArrayList<>();
         this.layoutResource = resource;
 
     }
@@ -64,7 +68,8 @@ public class MovieArrayAdapter extends ArrayAdapter {
             ImageView posterImageView = (ImageView) row.findViewById(R.id.movie_poster);
 
             (titleTextView).setText(movie.getMovieTitle());
-            Picasso.with(context).load(POSTER_PATH + movie.getMoviePosterPath()).into(posterImageView);
+            // Need to substring because of the \ that appears before the path for some reason in the JSON.
+            Picasso.with(context).load(POSTER_PATH + movie.getMoviePosterPath().substring(1)).into(posterImageView);
         }
 
         return row;

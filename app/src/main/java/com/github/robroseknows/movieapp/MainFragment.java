@@ -39,7 +39,6 @@ public class MainFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        adapter = new MovieArrayAdapter(null, R.layout.movie_poster_item, (MovieObject[]) movies.toArray());
         setHasOptionsMenu(true);
     }
 
@@ -62,6 +61,9 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+
+        movies = new ArrayList<MovieObject>();
+        adapter = new MovieArrayAdapter(getActivity(), R.layout.movie_poster_item, movies);
 
 
 

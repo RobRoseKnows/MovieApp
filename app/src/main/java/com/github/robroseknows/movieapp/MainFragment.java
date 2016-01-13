@@ -1,16 +1,24 @@
 package com.github.robroseknows.movieapp;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Movie;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
+import android.Manifest.permission;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,12 +31,14 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.jar.Manifest;
 
 
 public class MainFragment extends Fragment {
 
     private final String API_KEY = SecretKeys.MOVIEDB_KEY;
     private final String LOG_TAG = "MainFragment";
+    private final int PERMISSION_REQUEST_INTERNET = 9;
     private MovieArrayAdapter adapter;
     private ArrayList<MovieObject> movies;
 
@@ -45,11 +55,55 @@ public class MainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        updateMovies();
+
+        // RIP simple calling.
+        if(ContextCompat.checkSelfPermission(getActivity(), permission.INTERNET) != PackageManager.PERMISSION_GRANTED) {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permission.INTERNET)) {
+
+                // Show them a dialog with the rationale.
+                AlertDialog.Builder rationaleAlert = new AlertDialog.Builder(getActivity());
+                rationaleAlert.setMessage(R.string.internet_permission_rationale);
+                rationaleAlert.setTitle(R.string.app_name);
+                rationaleAlert.setPositiveButton("OK",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                rationaleAlert.setCancelable(true);
+                rationaleAlert.create().show();
+
+                // Now request permission
+                ActivityCompat.requestPermissions(getActivity(), new String[]{permission.INTERNET}, PERMISSION_REQUEST_INTERNET);
+            } else {
+                ActivityCompat.requestPermissions(getActivity(), new String[]{permission.INTERNET}, PERMISSION_REQUEST_INTERNET);
+            }
+        } else {
+            updateMovies();
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_INTERNET: {
+                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    updateMovies();
+                    Toast.makeText(getActivity(), R.string.permission_thanks, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), R.string.sad_face, Toast.LENGTH_SHORT).show();
+                }
+
+                return;
+            }
+        }
     }
 
     private void updateMovies() {
-
+        FetchMovieListTask fetchMovies = new FetchMovieListTask();
+        fetchMovies.execute("popularity");
     }
 
     @Override
@@ -65,7 +119,8 @@ public class MainFragment extends Fragment {
         movies = new ArrayList<MovieObject>();
         adapter = new MovieArrayAdapter(getActivity(), R.layout.movie_poster_item, movies);
 
-
+        GridView movieGridView = (GridView) rootView.findViewById(R.id.movieGridView);
+        movieGridView.setAdapter(adapter);
 
         return rootView;
     }
@@ -160,7 +215,7 @@ public class MainFragment extends Fragment {
             MovieObject[] resultObjects = new MovieObject[movieArray.length()];
             for(int i = 0; i < movieArray.length(); i++) {
                 JSONObject currentJsonObject = (JSONObject) movieArray.get(i);
-                Log.v(LOG_TAG, currentJsonObject.getString(MDB_POSTER));
+                //Log.v(LOG_TAG, currentJsonObject.getString(MDB_POSTER));
                 MovieObject newMovieObject = new MovieObject(
                         currentJsonObject.getInt(MDB_ID),
                         currentJsonObject.getString(MDB_TITLE),

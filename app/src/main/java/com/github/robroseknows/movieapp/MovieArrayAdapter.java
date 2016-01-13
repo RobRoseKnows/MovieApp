@@ -23,7 +23,7 @@ public class MovieArrayAdapter extends ArrayAdapter {
     private List<MovieObject> movies;
     private int layoutResource;
 
-    private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185";
+    private static final String POSTER_PATH = "http://image.tmdb.org/t/p/w185/";
     private static final String LOG_TAG = "MovieArrayAdapter";
 
     public MovieArrayAdapter(Context context, int resource, List<MovieObject> objects) {

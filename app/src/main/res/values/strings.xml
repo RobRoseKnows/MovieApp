@@ -5,4 +5,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="pop_sort">Sort by Populatity</string>
     <string name="rating_sort">Sort by Rating</string>
+    <string name="internet_permission_rationale">We need the Internet to load a list of movies.</string>
+    <string name="sad_face">We can\'t do anything... :(</string>
+    <string name="permission_thanks">Thanks for the Internet!</string>
 </resources>

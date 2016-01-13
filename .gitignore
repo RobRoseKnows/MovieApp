@@ -3,7 +3,7 @@
 
 # Studio
 .gradle
-.idea
+/.idea
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries

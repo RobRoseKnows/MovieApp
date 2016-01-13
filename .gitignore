@@ -2,8 +2,8 @@
 /app/src/main/java/com/github/robroseknows/movieapp/SecretKeys.java
 
 # Studio
-.gradle
-/.idea
+.gradle/
+.idea/
 /local.properties
 /.idea/workspace.xml
 /.idea/libraries
